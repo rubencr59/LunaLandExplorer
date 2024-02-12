@@ -22,9 +22,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.playButton){
-
             GameView gameView = new GameView(this);
-            gameView.setBackgroundColor(Color.WHITE);
+            gameView.setBackgroundColor(Color.BLACK);
             setContentView(gameView);
         }else if (v.getId() == R.id.exitButton){
             finish();
