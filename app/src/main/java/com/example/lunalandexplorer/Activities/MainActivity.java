@@ -1,10 +1,12 @@
-package com.example.lunalandexplorer;
+package com.example.lunalandexplorer.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.example.lunalandexplorer.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -22,9 +24,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.playButton){
-            GameView gameView = new GameView(this);
-            gameView.setBackgroundColor(Color.BLACK);
-            setContentView(gameView);
+            Intent intent = new Intent(this, GameActivity.class);
+            startActivity(intent);
+            this.finish();
         }else if (v.getId() == R.id.exitButton){
             finish();
         }

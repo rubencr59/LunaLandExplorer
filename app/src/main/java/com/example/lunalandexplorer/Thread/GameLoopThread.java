@@ -1,6 +1,10 @@
-package com.example.lunalandexplorer;
+package com.example.lunalandexplorer.Thread;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
+
+import com.example.lunalandexplorer.GameLogic;
+import com.example.lunalandexplorer.View.GameView;
+
 public class GameLoopThread extends Thread {
 
     static final long FPS = 60;
@@ -9,11 +13,15 @@ public class GameLoopThread extends Thread {
 
     private GameView gv;
 
+    private GameLogic gameLogic;
+
     private boolean running;
 
-    public  GameLoopThread(GameView gameView, SurfaceHolder surfaceHolder) {
+    public  GameLoopThread(GameView gameView, SurfaceHolder surfaceHolder, GameLogic gameLogic) {
         this.sh = surfaceHolder;
         this.gv = gameView;
+        this.gameLogic = gameLogic;
+
         running = false;
 
     }
