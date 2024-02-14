@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 
+import com.example.lunalandexplorer.Activities.GameActivity;
 import com.example.lunalandexplorer.Sprites.Boss;
 import com.example.lunalandexplorer.Sprites.BossAttack;
 import com.example.lunalandexplorer.Sprites.Enemy;
@@ -33,8 +34,10 @@ public class GameLogic {
 
     private int nivel = 1;
 
+    private GameActivity gameActivity;
 
-    public GameLogic(GameView gameView) {
+
+    public GameLogic(GameView gameView, GameActivity gameActivity) {
         enemies = new ArrayList<>();
         powerUps = new ArrayList<>();
         temps = new ArrayList<>();
@@ -42,6 +45,7 @@ public class GameLogic {
         createSpaceship();
         crearEnemigos();
         boss = generarBoss();
+        this.gameActivity = gameActivity;
 
     }
 
@@ -139,13 +143,12 @@ public class GameLogic {
                 Laser laser = laserIterator.next();
 
                 if (laser.isCollition(enemy)) {
-                    //Cuando le golpee que se ponga de color rojo
-
                     enemy.kick(laser.getDamage());
                     laserIterator.remove();
                     if(enemy.isDeathSprite()){
                         temps.add(generarExplosion(enemy.getX(), enemy.getY()));
                         enemyIterator.remove();
+                        gameActivity.setScore(1);
                         if(enemies.isEmpty()){
                             siguienteNivel();
                         }

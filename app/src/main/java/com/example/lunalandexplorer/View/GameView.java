@@ -11,6 +11,7 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
+import com.example.lunalandexplorer.Activities.GameActivity;
 import com.example.lunalandexplorer.Activities.MainActivity;
 import com.example.lunalandexplorer.BackgroundMusicPlayer;
 import com.example.lunalandexplorer.GameLogic;
@@ -42,7 +43,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        gameLogic = new GameLogic(this);
+        gameLogic = new GameLogic(this, (GameActivity) getContext());
         this.setBackgroundResource(R.drawable.river_background);
         BackgroundMusicPlayer.start(getContext(), R.raw.music_background);
 
@@ -84,21 +85,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (isGameOver) {
-            canvas.drawColor(Color.BLACK);
-
-            Paint paint = new Paint();
-            paint.setColor(Color.WHITE);
-            paint.setTextSize(50);
-            paint.setTextAlign(Paint.Align.CENTER);
-
-            String gameOverText = "Game Over";
-            canvas.drawText(gameOverText, getWidth() / 2f, getHeight() / 2f, paint);
-            if (System.currentTimeMillis() - gameOverStartTime >= GAME_OVER_DELAY) {
-                irMenu();
-            }
-
-        } else {
 
             Spaceship spaceship = gameLogic.getSpaceship();
             spaceship.onDraw(canvas);
@@ -133,7 +119,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             gameLogic.checkGameOver();
             gameLogic.checkPowerUpCollisions();
 
-        }
     }
 
     public void gameOver(){
