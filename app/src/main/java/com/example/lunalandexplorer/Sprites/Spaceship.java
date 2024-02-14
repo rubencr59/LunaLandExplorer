@@ -1,6 +1,8 @@
 package com.example.lunalandexplorer.Sprites;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.health.connect.datatypes.units.Power;
 
 import com.example.lunalandexplorer.View.GameView;
@@ -14,11 +16,12 @@ public class Spaceship extends Sprite {
 
     private boolean disparar = false;
     private static final int BMP_ROWS = 4;
+    private static final int BMP_COLUMNS = 4;
     private int normalAnimationRow = 2;
-
     private int laserStyle = 1;
-
     private int currentFrame = 0;
+    private static final int MAX_FRAME_DURATION = 15;
+    private int frameDuration = MAX_FRAME_DURATION;
 
 
     public Spaceship(GameView gameView, Bitmap bmp) {
@@ -26,6 +29,8 @@ public class Spaceship extends Sprite {
         lasers = new ArrayList<Laser>();
         x = gameView.getWidth() / 2 - width / 2;
         y = gameView.getHeight() - 350;
+        frameDuration = MAX_FRAME_DURATION;
+
     }
 
 
@@ -36,8 +41,7 @@ public class Spaceship extends Sprite {
     }
 
     public void shoot(Bitmap bmpLaser) {
-        Laser laser = new Laser(gameView, bmpLaser, this, laserStyle);
-        addLaser(laser);
+        addLaser(new Laser(gameView, bmpLaser, this, laserStyle));
     }
 
 
@@ -46,7 +50,7 @@ public class Spaceship extends Sprite {
             cambiarAnimacion(powerUp.getPowerUpType());
     }
 
-    //dependiendo del powerUp que se coja se cambia la animacion de la nave y el tipo de laser
+
     public void cambiarAnimacion(int tipoPowerUp){
         switch (tipoPowerUp){
             case 1:

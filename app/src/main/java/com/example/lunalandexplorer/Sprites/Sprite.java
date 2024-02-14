@@ -16,7 +16,7 @@ public abstract class Sprite {
     private static final int BMP_ROWS = 4;
     private static final int BMP_COLUMNS = 4;
     private int currentFrame;
-    private static final int MAX_FRAME_DURATION = 15;
+    private static int MAX_FRAME_DURATION = 15;
     private int frameDuration = MAX_FRAME_DURATION;
 
 
@@ -97,68 +97,27 @@ public abstract class Sprite {
         this.deathSprite = deathSprite;
     }
 
-    public GameView getGameView() {
-        return gameView;
-    }
 
-    public void setGameView(GameView gameView) {
-        this.gameView = gameView;
-    }
 
-    public Bitmap getBmp() {
-        return bmp;
-    }
 
     public void setBmp(Bitmap bmp) {
         this.bmp = bmp;
     }
 
-    public int getxSpeed() {
-        return xSpeed;
-    }
 
-    public void setxSpeed(int xSpeed) {
-        this.xSpeed = xSpeed;
-    }
 
     public int getySpeed() {
         return ySpeed;
     }
 
-    public void setySpeed(int ySpeed) {
-        this.ySpeed = ySpeed;
-    }
+
 
     public int getMaxFrameDuration() {
         return MAX_FRAME_DURATION;
     }
 
-    public int getCurrentFrame() {
-        return currentFrame;
-    }
-
-    public void setCurrentFrame(int currentFrame) {
-        this.currentFrame = currentFrame;
-    }
-
-    public int getFrameDuration() {
-        return frameDuration;
-    }
-
-    public void setFrameDuration(int frameDuration) {
-        this.frameDuration = frameDuration;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public void setXSpeed(int xSpeed) {
-        this.xSpeed = xSpeed;
+    public void setMaxFrameDuration(int maxFrameDuration) {
+        MAX_FRAME_DURATION = maxFrameDuration;
     }
 
     public void setYSpeed(int ySpeed) {

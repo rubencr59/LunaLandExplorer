@@ -1,44 +1,79 @@
 package com.example.lunalandexplorer.Sprites;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.widget.ImageView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.request.target.ImageViewTarget;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Rect;
+
 import com.example.lunalandexplorer.R;
 import com.example.lunalandexplorer.View.GameView;
 
-public class Boss extends Sprite {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-    private ImageView imageView;
+public class Boss extends Enemy {
 
-    public Boss(Context context, GameView gameView) {
-        super(gameView, null);
-        initialize(context);
-        this.x = gameView.getWidth() / 2;
+    private static final int BMP_ROWS = 5;
+    private static final int BMP_COLUMNS = 5;
+    private static final int MAX_FRAME_DURATION = 15;
+    private int frameDuration = MAX_FRAME_DURATION;
+    private int currentFrame;
+    private int movesPerRow = 5;
+    private int movesCount = 0;
+    private int totalRows = 5;
+    private int currentRow;
+
+    private int maxFrameDuration;
+
+    private List<BossAttack> bossAttacks = new ArrayList<>();
+
+    public Boss (GameView gameView, Bitmap bmp, int life, Spaceship spaceship) {
+        super(gameView, bmp  , life, spaceship);
+        this.x = gameView.getWidth() / 2 - bmp.getWidth() / BMP_COLUMNS / 2;
         this.y = 0;
+        this.width = bmp.getWidth() / BMP_COLUMNS;
+        this.height = bmp.getHeight() / BMP_ROWS;
+        this.currentRow = 0;
+        this.maxFrameDuration = 999999999;
     }
 
-    private void initialize(Context context) {
-        imageView = new ImageView(context);
-        Glide.with(context)
-                .asGif()
-                .load(R.raw.boss)  // Reemplaza con el nombre de tu archivo GIF
-                .placeholder(R.drawable.image)
-                .into(new ImageViewTarget<GifDrawable>(imageView) {
-                    @Override
-                    protected void setResource(GifDrawable resource) {
-                        Bitmap bossBitmap = resource.getFirstFrame();
-                        setBitmap(bossBitmap);
-                        resource.start();
-                    }
-                });
+    @Override
+    public void update() {
+        frameDuration--;
+        if (frameDuration <= 0) {
+            currentFrame = ++currentFrame % BMP_COLUMNS;
+            frameDuration = maxFrameDuration;
+        }
+        if (++movesCount >= movesPerRow) {
+            movesCount = 0;
+            currentRow = (currentRow + 1) % totalRows;
+            currentFrame = 0;
+        }
+
+        Random rnd = new Random();
+        if (rnd.nextInt(10) == 0) {
+            shoot();
+        }
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bmp = bitmap;
-        this.width = bitmap.getWidth();
-        this.height = bitmap.getHeight();
+    @Override
+    public void onDraw(Canvas canvas) {
+        update();
+        int srcX = currentFrame * width;
+        int srcY = currentRow * height;
+        Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
+        Rect dst = new Rect(x, y, x + width, y + height);
+        canvas.drawBitmap(bmp, src, dst, null);
+    }
+
+    public void shoot() {
+        Bitmap bmpAttack = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.laser_bolts);
+            bossAttacks.add(new BossAttack(gameView, bmpAttack, this, 1));
+    }
+
+
+    public List<BossAttack> getBossAttacks() {
+        return bossAttacks;
     }
 
 }

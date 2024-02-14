@@ -34,7 +34,7 @@ public class PowerUp  extends Sprite{
         this.width = bmp.getWidth() / BMP_COLUMNS;
         this.height = bmp.getHeight() / BMP_ROWS;
 
-        this.setYSpeed(6);
+        this.setYSpeed(12);
     }
 
     @Override

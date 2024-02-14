@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 
 import com.example.lunalandexplorer.Sprites.Boss;
+import com.example.lunalandexplorer.Sprites.BossAttack;
 import com.example.lunalandexplorer.Sprites.Enemy;
 import com.example.lunalandexplorer.Sprites.Laser;
 import com.example.lunalandexplorer.Sprites.PowerUp;
@@ -25,6 +26,8 @@ public class GameLogic {
     private List<PowerUp> powerUps;
 
     private List<TempSprite> temps;
+
+    private Boss boss;
     private GameView gameView;
     private int numeroEnemigos = 3;
 
@@ -38,6 +41,8 @@ public class GameLogic {
         this.gameView = gameView;
         createSpaceship();
         crearEnemigos();
+        boss = generarBoss();
+
     }
 
     private void createSpaceship() {
@@ -45,10 +50,14 @@ public class GameLogic {
         this.spaceship =  new Spaceship(gameView, bitmap);
     }
 
-
     private Enemy generarEnemigo(int resource, int life){
         Bitmap bitmap = BitmapFactory.decodeResource(gameView.getResources(), resource);
         return new Enemy(gameView, bitmap, life, spaceship);
+    }
+
+    private Boss generarBoss(){
+        Bitmap bitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.boss);
+        return new Boss(gameView, bitmap,50, spaceship);
     }
 
     private TempSprite generarExplosion(int x, int y){
@@ -110,6 +119,12 @@ public class GameLogic {
             powerUp.update();
         }
 
+        if(boss != null){
+            for (BossAttack bossAttack : boss.getBossAttacks()) {
+                bossAttack.update();
+            }
+        }
+
 
 
     }
@@ -124,6 +139,8 @@ public class GameLogic {
                 Laser laser = laserIterator.next();
 
                 if (laser.isCollition(enemy)) {
+                    //Cuando le golpee que se ponga de color rojo
+
                     enemy.kick(laser.getDamage());
                     laserIterator.remove();
                     if(enemy.isDeathSprite()){
@@ -152,7 +169,10 @@ public class GameLogic {
 
     public void siguienteNivel(){
         nivel++;
-        if(nivel == 2){
+        boss = generarBoss();
+        if(nivel == 3){
+            gameView.setBackgroundResource(R.drawable.desert_background);
+        }else if(nivel == 12){
             gameView.setBackgroundResource(R.drawable.inferno);
         }
         crearEnemigos();
@@ -204,6 +224,10 @@ public class GameLogic {
 
     public List<PowerUp> getPowerUps() {
         return powerUps;
+    }
+
+    public Boss getBoss(){
+        return boss;
     }
 
 

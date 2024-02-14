@@ -2,7 +2,11 @@ package com.example.lunalandexplorer.Sprites;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.Paint;
 
 import com.example.lunalandexplorer.GameLogic;
 import com.example.lunalandexplorer.View.GameView;
@@ -22,7 +26,7 @@ public class Enemy extends Sprite {
 
     private Spaceship spaceship;
 
-
+    private Bitmap damagedBitmap;
 
     public Enemy(GameView gameView, Bitmap bmp, int life, Spaceship spaceship) {
         super(gameView, bmp);
@@ -30,15 +34,32 @@ public class Enemy extends Sprite {
         this.height = bmp.getHeight() / BMP_ROWS;
         this.life = life;
         this.spaceship = spaceship;
+        this.damagedBitmap = applyRedOverlay(bmp);
+
         Random rnd = new Random();
 
         x = rnd.nextInt(gameView.getWidth() - width);
         y = 0;
 
-        xSpeed = 1;
-        ySpeed = 2;
+        xSpeed = 2;
+        ySpeed = 3;
     }
 
+    private Bitmap applyRedOverlay(Bitmap originalBitmap) {
+        Bitmap redBitmap = Bitmap.createBitmap(originalBitmap.getWidth(), originalBitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(redBitmap);
+        canvas.drawBitmap(originalBitmap, 0, 0, null);
+
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setAlpha(100);
+        PorterDuff.Mode mode = PorterDuff.Mode.SRC_ATOP;
+        paint.setXfermode(new PorterDuffXfermode(mode));
+
+        canvas.drawRect(0, 0, originalBitmap.getWidth(), originalBitmap.getHeight(), paint);
+
+        return redBitmap;
+    }
 
     @Override
     public void update() {
@@ -106,6 +127,7 @@ public class Enemy extends Sprite {
 
     @Override
     public void kick(int damage) {
+        this.setBmp(damagedBitmap);
         life -= damage;
         if (life <= 0) {
            setDeathSprite(true);

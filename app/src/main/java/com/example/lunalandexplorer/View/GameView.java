@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import com.example.lunalandexplorer.Activities.MainActivity;
 import com.example.lunalandexplorer.BackgroundMusicPlayer;
 import com.example.lunalandexplorer.GameLogic;
+import com.example.lunalandexplorer.Sprites.BossAttack;
 import com.example.lunalandexplorer.Sprites.Spaceship;
 import com.example.lunalandexplorer.Thread.GameLoopThread;
 import com.example.lunalandexplorer.R;
@@ -42,7 +43,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         gameLogic = new GameLogic(this);
-        this.setBackgroundResource(R.drawable.background);
+        this.setBackgroundResource(R.drawable.river_background);
         BackgroundMusicPlayer.start(getContext(), R.raw.music_background);
 
         gameLoopThread = new GameLoopThread(this, getHolder(), gameLogic);
@@ -116,6 +117,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             for (PowerUp powerUp : gameLogic.getPowerUps()) {
                 powerUp.onDraw(canvas);
+            }
+
+
+
+            if(gameLogic.getBoss() != null){
+                gameLogic.getBoss().onDraw(canvas);
+
+                for (BossAttack bossAttack : gameLogic.getBoss().getBossAttacks()) {
+                    bossAttack.onDraw(canvas);
+                }
             }
 
             gameLogic.checkCollisions();
