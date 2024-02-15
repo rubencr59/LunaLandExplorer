@@ -16,6 +16,7 @@ import com.example.lunalandexplorer.Activities.MainActivity;
 import com.example.lunalandexplorer.BackgroundMusicPlayer;
 import com.example.lunalandexplorer.GameLogic;
 import com.example.lunalandexplorer.Sprites.BossAttack;
+import com.example.lunalandexplorer.Sprites.Heart;
 import com.example.lunalandexplorer.Sprites.Spaceship;
 import com.example.lunalandexplorer.Thread.GameLoopThread;
 import com.example.lunalandexplorer.R;
@@ -89,6 +90,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             Spaceship spaceship = gameLogic.getSpaceship();
             spaceship.onDraw(canvas);
 
+            Heart heart = gameLogic.getHeart();
+            heart.onDraw(canvas);
+
             for (Laser laser : gameLogic.getSpaceship().getLasers()) {
                 laser.onDraw(canvas);
             }
@@ -127,6 +131,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         gameLoopThread.setRunning(false);
         BackgroundMusicPlayer.stop();
         isGameOver = true;
+
+        gameLogic.gameOver();
 
     }
 

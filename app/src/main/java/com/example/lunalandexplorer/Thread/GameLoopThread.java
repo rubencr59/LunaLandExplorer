@@ -7,7 +7,7 @@ import com.example.lunalandexplorer.View.GameView;
 
 public class GameLoopThread extends Thread {
 
-    static final long FPS = 30;
+    static final long FPS = 60;
 
     private SurfaceHolder sh;
 

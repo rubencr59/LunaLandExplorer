@@ -23,13 +23,14 @@ public class Spaceship extends Sprite {
     private static final int MAX_FRAME_DURATION = 15;
     private int frameDuration = MAX_FRAME_DURATION;
 
+    private int life = 4;
+
 
     public Spaceship(GameView gameView, Bitmap bmp) {
         super(gameView, bmp);
         lasers = new ArrayList<Laser>();
         x = gameView.getWidth() / 2 - width / 2;
         y = gameView.getHeight() - 350;
-        frameDuration = MAX_FRAME_DURATION;
 
     }
 
@@ -87,6 +88,14 @@ public class Spaceship extends Sprite {
 
     public boolean isCollition(float x2, float y2) {
         return x2 > x && x2 < x + width && y2 > y && y2 < y + height;
+    }
+
+    @Override
+    public void kick(int damage) {
+        life -= damage;
+        if (life <= 0) {
+            setDeathSprite(true);
+        }
     }
 
 

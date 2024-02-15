@@ -84,6 +84,10 @@ public class BossAttack extends Sprite {
         canvas.drawBitmap(bmp, src, dst, null);
     }
 
+    public boolean isCollition(Spaceship spaceship) {
+        return spaceship.getX() < x + width && spaceship.getX() + spaceship.getWidth() > x && spaceship.getY() < y + height && spaceship.getY() + spaceship.getHeight() > y;
+
+    }
 
     public int getCurrentColumn() {
         return currentColumn;

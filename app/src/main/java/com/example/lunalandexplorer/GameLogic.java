@@ -8,11 +8,13 @@ import com.example.lunalandexplorer.Activities.GameActivity;
 import com.example.lunalandexplorer.Sprites.Boss;
 import com.example.lunalandexplorer.Sprites.BossAttack;
 import com.example.lunalandexplorer.Sprites.Enemy;
+import com.example.lunalandexplorer.Sprites.Heart;
 import com.example.lunalandexplorer.Sprites.Laser;
 import com.example.lunalandexplorer.Sprites.PowerUp;
 import com.example.lunalandexplorer.Sprites.Spaceship;
 import com.example.lunalandexplorer.Sprites.TempSprite;
 import com.example.lunalandexplorer.View.GameView;
+import com.example.lunalandexplorer.service.SelectSpaceShipService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,13 +30,18 @@ public class GameLogic {
 
     private List<TempSprite> temps;
 
+
     private Boss boss;
     private GameView gameView;
+
+    private Heart heart;
     private int numeroEnemigos = 3;
 
     private int nivel = 1;
 
     private GameActivity gameActivity;
+
+    private int enemyLifeMedium = 2;
 
 
     public GameLogic(GameView gameView, GameActivity gameActivity) {
@@ -43,15 +50,21 @@ public class GameLogic {
         temps = new ArrayList<>();
         this.gameView = gameView;
         createSpaceship();
-        crearEnemigos();
-        boss = generarBoss();
+        crearEnemigos(2, 4);
         this.gameActivity = gameActivity;
 
     }
 
     private void createSpaceship() {
-        Bitmap bitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.spaceship);
+        int modelo = SelectSpaceShipService.getSpaceshipSelected();
+        if(modelo == 0){
+            modelo = R.drawable.spaceship;
+        }
+        Bitmap bitmap = BitmapFactory.decodeResource(gameView.getResources(), modelo);
         this.spaceship =  new Spaceship(gameView, bitmap);
+
+        Bitmap heartBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.heart_animated_1);
+        this.heart = new Heart(gameView, heartBitmap);
     }
 
     private Enemy generarEnemigo(int resource, int life){
@@ -74,15 +87,15 @@ public class GameLogic {
         return new PowerUp(gameView, bitmap, powerUpRow, powerUpColumn);
     }
 
-    private void crearEnemigos() {
+    private void crearEnemigos(int enemyLifeMediug, int enemyLifeBig) {
         Random numeroRandom = new Random();
 
         if(enemies.isEmpty()){
             for(int i = 0; i < numeroEnemigos; i++){
                 if(numeroRandom.nextInt(2) == 0){
-                    enemies.add(generarEnemigo(R.drawable.enemy_medium,2));
+                    enemies.add(generarEnemigo(R.drawable.enemy_medium,enemyLifeMediug));
                 }else{
-                    enemies.add(generarEnemigo(R.drawable.enemy_big,4));
+                    enemies.add(generarEnemigo(R.drawable.enemy_big,enemyLifeBig));
                 }
             }
             numeroEnemigos += 2;
@@ -108,6 +121,7 @@ public class GameLogic {
 
     public void update() {
         spaceship.update();
+        heart.update();
         for (Laser laser : spaceship.getLasers()) {
             laser.update();
         }
@@ -170,15 +184,31 @@ public class GameLogic {
         }
     }
 
+    public void checkBossCollisions() {
+        if(boss != null){
+            Iterator<BossAttack> bossAttackIterator = boss.getBossAttacks().iterator();
+            while (bossAttackIterator.hasNext()) {
+                BossAttack bossAttack = bossAttackIterator.next();
+                if(bossAttack.isCollition(spaceship)){
+                    spaceship.kick(bossAttack.getDamage());
+                    bossAttackIterator.remove();
+                }
+            }
+        }
+    }
+
     public void siguienteNivel(){
         nivel++;
-        boss = generarBoss();
-        if(nivel == 3){
+
+        if(nivel == 6){
             gameView.setBackgroundResource(R.drawable.desert_background);
+            enemyLifeMedium = enemyLifeMedium + 2;
         }else if(nivel == 12){
+            numeroEnemigos = 0;
+            boss = generarBoss();
             gameView.setBackgroundResource(R.drawable.inferno);
         }
-        crearEnemigos();
+        crearEnemigos(enemyLifeMedium, enemyLifeMedium + 1);
         crearPowerUp();
     }
 
@@ -209,6 +239,10 @@ public class GameLogic {
         }, delayMillis);
     }
 
+    public void gameOver(){
+        gameActivity.createGameOverLayout();
+    }
+
 
 
 
@@ -233,9 +267,9 @@ public class GameLogic {
         return boss;
     }
 
-
-
-
+    public Heart getHeart() {
+        return heart;
+    }
 
 
 }

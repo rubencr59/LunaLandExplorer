@@ -2,9 +2,12 @@ package com.example.lunalandexplorer.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.lunalandexplorer.R;
@@ -13,8 +16,9 @@ import com.example.lunalandexplorer.View.GameView;
 public class GameActivity extends AppCompatActivity {
 
     FrameLayout gameLayout;
-
-    private  int score = 0;
+    TextView score;
+    private  int scoreCount = 0;
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,17 +29,39 @@ public class GameActivity extends AppCompatActivity {
         gameLayout.addView(new GameView(this));
 
 
-        TextView score = new TextView(this);
-        score.setText("Score: "+ score);
+        score = new TextView(this);
+        score.setText("Score: "+ scoreCount + "");
         score.setTextColor(Color.BLACK);
         score.setTextSize(22);
         score.setPadding(60, 60, 20, 20);
 
         gameLayout.addView(score);
-
     }
 
-    public void setScore(int score){
-        this.score = this.score + score;
+    @SuppressLint("SetTextI18n")
+    public void setScore(int scoreSum){
+        this.scoreCount = this.scoreCount + scoreSum;
+        score.setText("Score: "+ scoreCount + "");
     }
+
+    public void createGameOverLayout() {
+        FrameLayout gameOverLayout = new FrameLayout(this);
+        gameOverLayout.setLayoutParams(new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                Gravity.CENTER));
+
+        gameOverLayout.setBackgroundColor(Color.BLACK);
+
+        TextView gameOverText = new TextView(this);
+        gameOverText.setText("GAME OVER");
+        gameOverText.setTextColor(Color.WHITE);
+        gameOverText.setTextSize(40);
+        gameOverText.setGravity(Gravity.CENTER);
+
+        gameOverLayout.addView(gameOverText);
+        gameLayout.addView(gameOverLayout);
+    }
+
+
 }

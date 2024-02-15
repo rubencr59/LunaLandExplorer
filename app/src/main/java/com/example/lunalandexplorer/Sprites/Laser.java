@@ -46,17 +46,17 @@ public class Laser extends Sprite {
             case 2:
                 this.currentColumn = 1;
                 this.currentRow = 0;
-                this.damage = this.damage + 2;
+                this.damage = this.damage + 3;
                 break;
             case 3:
                 this.currentColumn = 0;
                 this.currentRow = 1;
-                this.damage = this.damage + 3;
+                this.damage = this.damage + 4;
                 break;
             case 4:
                 this.currentColumn = 1;
                 this.currentRow = 1;
-                this.damage = this.damage + 4;
+                this.damage = this.damage + 5;
                 break;
         }
     }

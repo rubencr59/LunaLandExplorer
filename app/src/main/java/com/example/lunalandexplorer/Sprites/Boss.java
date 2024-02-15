@@ -54,6 +54,7 @@ public class Boss extends Enemy {
         if (rnd.nextInt(10) == 0) {
             shoot();
         }
+
     }
 
     @Override
