@@ -34,7 +34,7 @@ public class Enemy extends Sprite {
         this.height = bmp.getHeight() / BMP_ROWS;
         this.life = life;
         this.spaceship = spaceship;
-        this.damagedBitmap = applyRedOverlay(bmp);
+        this.damagedBitmap = aplicarCapaRoja(bmp);
 
         Random rnd = new Random();
 
@@ -45,7 +45,7 @@ public class Enemy extends Sprite {
         ySpeed = 3;
     }
 
-    private Bitmap applyRedOverlay(Bitmap originalBitmap) {
+    private Bitmap aplicarCapaRoja(Bitmap originalBitmap) {
         Bitmap redBitmap = Bitmap.createBitmap(originalBitmap.getWidth(), originalBitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(redBitmap);
         canvas.drawBitmap(originalBitmap, 0, 0, null);

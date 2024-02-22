@@ -25,12 +25,16 @@ public class SelectSpaceShip extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         if(v.getId() == R.id.selectSpaceShip2){
             SelectSpaceShipService.selectSpaceShip(R.drawable.spaceship);
-        }else if (v.getId() == R.id.selectSpaceShip1){
-            SelectSpaceShipService.selectSpaceShip(R.drawable.spaceship2);
-        }else if(v.getId() == R.id.buttonReturn){
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
+            this.finish();
+        }else if (v.getId() == R.id.selectSpaceShip1){
+            SelectSpaceShipService.selectSpaceShip(R.drawable.spaceship2);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            this.finish();
         }
     }
 }

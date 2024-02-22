@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/space"
     tools:context=".Activities.SelectSpaceShip">
 
     <TextView
@@ -12,6 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="160dp"
         android:text="SELECT SPACESHIP"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +55,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="294dp"
         android:onClick="onClick"
-        android:text="Button"
+        android:text="Back"
         app:layout_constraintBottom_toTopOf="@+id/selectSpaceShip1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

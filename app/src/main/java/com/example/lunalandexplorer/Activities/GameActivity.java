@@ -63,5 +63,24 @@ public class GameActivity extends AppCompatActivity {
         gameLayout.addView(gameOverLayout);
     }
 
+    public void createWinLayout() {
+        FrameLayout winLayout = new FrameLayout(this);
+        winLayout.setLayoutParams(new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                Gravity.CENTER));
+
+        winLayout.setBackgroundColor(Color.BLACK);
+
+        TextView winText = new TextView(this);
+        winText.setText("YOU WIN");
+        winText.setTextColor(Color.WHITE);
+        winText.setTextSize(40);
+        winText.setGravity(Gravity.CENTER);
+
+        winLayout.addView(winText);
+        gameLayout.addView(winLayout);
+    }
+
 
 }

@@ -43,6 +43,9 @@ public class GameLogic {
 
     private int enemyLifeMedium = 2;
 
+    private final Handler handler = new Handler();
+    private static final long DELAY_MILLIS = 2000;
+
 
     public GameLogic(GameView gameView, GameActivity gameActivity) {
         enemies = new ArrayList<>();
@@ -60,11 +63,13 @@ public class GameLogic {
         if(modelo == 0){
             modelo = R.drawable.spaceship;
         }
-        Bitmap bitmap = BitmapFactory.decodeResource(gameView.getResources(), modelo);
-        this.spaceship =  new Spaceship(gameView, bitmap);
-
         Bitmap heartBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.heart_animated_1);
         this.heart = new Heart(gameView, heartBitmap);
+
+        Bitmap bitmap = BitmapFactory.decodeResource(gameView.getResources(), modelo);
+        this.spaceship =  new Spaceship(gameView, bitmap, heart);
+
+
     }
 
     private Enemy generarEnemigo(int resource, int life){
@@ -98,7 +103,8 @@ public class GameLogic {
                     enemies.add(generarEnemigo(R.drawable.enemy_big,enemyLifeBig));
                 }
             }
-            numeroEnemigos += 2;
+
+            numeroEnemigos += numeroRandom.nextInt(2);
         }
     }
 
@@ -142,20 +148,15 @@ public class GameLogic {
                 bossAttack.update();
             }
         }
-
-
-
     }
 
     public void checkCollisions() {
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while (enemyIterator.hasNext()) {
             Enemy enemy = enemyIterator.next();
-
             Iterator<Laser> laserIterator = spaceship.getLasers().iterator();
             while (laserIterator.hasNext()) {
                 Laser laser = laserIterator.next();
-
                 if (laser.isCollition(enemy)) {
                     enemy.kick(laser.getDamage());
                     laserIterator.remove();
@@ -184,7 +185,8 @@ public class GameLogic {
         }
     }
 
-    public void checkBossCollisions() {
+
+    public void checkBossAttackCollisions() {
         if(boss != null){
             Iterator<BossAttack> bossAttackIterator = boss.getBossAttacks().iterator();
             while (bossAttackIterator.hasNext()) {
@@ -197,15 +199,34 @@ public class GameLogic {
         }
     }
 
+    public void checkBossGetHit(){
+        if(boss != null){
+            Iterator<Laser> laserIterator = spaceship.getLasers().iterator();
+            while (laserIterator.hasNext()) {
+                Laser laser = laserIterator.next();
+                if (laser.isCollition(boss)) {
+                    boss.kick(laser.getDamage());
+                    laserIterator.remove();
+                    if(boss.isDeathSprite()){
+                        handler.removeCallbacks(bossNotHitRunnable);
+                        gameView.gameWin();
+                    } else {
+                        startBossNotHitTimer();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
     public void siguienteNivel(){
         nivel++;
-
         if(nivel == 6){
             gameView.setBackgroundResource(R.drawable.desert_background);
             enemyLifeMedium = enemyLifeMedium + 2;
         }else if(nivel == 12){
-            numeroEnemigos = 0;
             boss = generarBoss();
+            numeroEnemigos = 0;
             gameView.setBackgroundResource(R.drawable.inferno);
         }
         crearEnemigos(enemyLifeMedium, enemyLifeMedium + 1);
@@ -215,13 +236,27 @@ public class GameLogic {
     public void checkGameOver() {
         for (Enemy enemy : enemies) {
             if (enemy.getY() == spaceship.getY() || enemy.isCollition(spaceship)) {
-                spaceship.setDeathSprite(true);
+                spaceship.kick(1);
             }
         }
 
         if(spaceship.isDeathSprite()){
             gameView.gameOver();
         }
+    }
+
+
+
+    private Runnable bossNotHitRunnable = new Runnable() {
+        @Override
+        public void run() {
+            boss.setBmp(BitmapFactory.decodeResource(gameView.getResources(), R.drawable.boss));
+            startBossNotHitTimer();
+        }
+    };
+
+    private void startBossNotHitTimer() {
+        handler.postDelayed(bossNotHitRunnable, DELAY_MILLIS);
     }
 
     public void startShooting() {
@@ -232,7 +267,7 @@ public class GameLogic {
             @Override
             public void run() {
                 if (spaceship.getDisparar()) {
-                    spaceship.shoot(BitmapFactory.decodeResource(gameView.getResources(), R.drawable.laser_bolts));
+                    spaceship.shoot();
                     handler.postDelayed(this, delayMillis);
                 }
             }
@@ -243,7 +278,9 @@ public class GameLogic {
         gameActivity.createGameOverLayout();
     }
 
-
+    public void gameWin(){
+        gameActivity.createWinLayout();
+    }
 
 
     public Spaceship getSpaceship() {

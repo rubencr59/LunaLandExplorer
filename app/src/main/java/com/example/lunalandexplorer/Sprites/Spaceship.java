@@ -1,10 +1,12 @@
 package com.example.lunalandexplorer.Sprites;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.health.connect.datatypes.units.Power;
 
+import com.example.lunalandexplorer.R;
 import com.example.lunalandexplorer.View.GameView;
 
 import java.util.ArrayList;
@@ -23,14 +25,20 @@ public class Spaceship extends Sprite {
     private static final int MAX_FRAME_DURATION = 15;
     private int frameDuration = MAX_FRAME_DURATION;
 
+    private Bitmap bmpLaser;
+
+    private Heart heart;
     private int life = 4;
 
 
-    public Spaceship(GameView gameView, Bitmap bmp) {
+    public Spaceship(GameView gameView, Bitmap bmp, Heart heart) {
         super(gameView, bmp);
         lasers = new ArrayList<Laser>();
         x = gameView.getWidth() / 2 - width / 2;
         y = gameView.getHeight() - 350;
+        this.bmpLaser = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.laser_bolts);
+
+        this.heart = heart;
 
     }
 
@@ -41,8 +49,12 @@ public class Spaceship extends Sprite {
         return normalAnimationRow;
     }
 
-    public void shoot(Bitmap bmpLaser) {
-        addLaser(new Laser(gameView, bmpLaser, this, laserStyle));
+    public void shoot() {
+        if(laserStyle != 99){
+            addLaser(new Laser(gameView, bmpLaser, this, laserStyle));
+        }else{
+            addLaser(new SpecialLaser(gameView, bmpLaser, this, laserStyle));
+        }
     }
 
 
@@ -75,7 +87,8 @@ public class Spaceship extends Sprite {
             case 4:
                 if (normalAnimationRow == 0){
                     normalAnimationRow = 2;
-                    laserStyle = 1;
+                    laserStyle = 99;
+                    this.bmpLaser = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.special_laser);
                 }
                 break;
 
@@ -90,9 +103,13 @@ public class Spaceship extends Sprite {
         return x2 > x && x2 < x + width && y2 > y && y2 < y + height;
     }
 
+    public boolean isCollitionWithBossAtack(BossAttack bossAtack){
+        return x < bossAtack.getX() + bossAtack.getWidth() && x + width > bossAtack.getX() && y < bossAtack.getY() + bossAtack.getHeight() && y + height > bossAtack.getY();
+    }
     @Override
     public void kick(int damage) {
         life -= damage;
+        heart.cambiarEstadoHeart();
         if (life <= 0) {
             setDeathSprite(true);
         }

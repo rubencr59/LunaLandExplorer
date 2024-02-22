@@ -33,7 +33,6 @@ public class Heart extends Sprite{
     public void update() {
         frameDuration--;
         if (frameDuration <= 0) {
-            currentFrame++;
             currentFrame = currentFrame % this.BMP_COLUMN;
             frameDuration = MAX_FRAME_DURATION;
         }
@@ -43,10 +42,14 @@ public class Heart extends Sprite{
     public void onDraw(Canvas canvas) {
         this.update();
         int srcX = currentFrame * width;
-        int srcY = 0; // Assuming the heart sprite is in the top row of the sprite sheet
+        int srcY = 0;
         Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
         Rect dst = new Rect(x, y, x + width, y + height);
         canvas.drawBitmap(bmp, src, dst, null);
+    }
+
+    public void cambiarEstadoHeart(){
+        currentFrame++;
     }
 
 }

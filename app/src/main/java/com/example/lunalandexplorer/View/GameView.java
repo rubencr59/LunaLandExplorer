@@ -122,6 +122,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             gameLogic.checkCollisions();
             gameLogic.checkGameOver();
             gameLogic.checkPowerUpCollisions();
+            if(gameLogic.getBoss()!=null){
+                gameLogic.checkBossAttackCollisions();
+                gameLogic.checkBossGetHit();
+            }
 
     }
 
@@ -134,6 +138,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         gameLogic.gameOver();
 
+    }
+
+    public void gameWin(){
+        isGameOver = true;
+        gameOverStartTime = System.currentTimeMillis();
+        gameLoopThread.setRunning(false);
+        BackgroundMusicPlayer.stop();
+        isGameOver = true;
+
+        gameLogic.gameWin();
     }
 
     @Override
